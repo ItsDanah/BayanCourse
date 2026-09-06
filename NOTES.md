@@ -26,7 +26,7 @@ For each one record: example, why it matters, and clean/preserve/task-dependent.
 - Class: HTML remnants
 - Example: الممر في حديقة شارع التحلية غير مناسب للكراسي المتحركة <br>
 - Why it matters: HTML markup tags are for formatting rather than part of the natural-language feedback.
-- Decision: Clean and remove HTML remnants.
+- Decision: Clean and remove HTML remnants..
 
 ### Defect 5
 - Class: Unicode forms
