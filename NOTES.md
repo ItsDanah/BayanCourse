@@ -40,6 +40,22 @@ For each one record: example, why it matters, and clean/preserve/task-dependent.
 - Why it matters: Character repetition can create inconsistent forms of the word and affect tokenization.
 - Decision: Task-dependent, reduce excessive repeated characters while keeping the original word recognizable.
 
+## Lab 1 — Sentence Segmentation
+
+I manually spot-checked five examples using the spaCy segmentation pipeline.
+
+1. An Arabic complaint was separated using periods, exclamation marks, and
+   Arabic question marks.
+2. The abbreviation `Dr.` was preserved and did not create an incorrect
+   sentence boundary.
+3. Mixed Arabic and English text was segmented successfully.
+4. Emoji were preserved during preprocessing and segmentation.
+5. In the numbered-list complaint, spaCy returned the numbered markers as
+   separate segments.
+
+The pipeline applied the shared preprocessing function and returned only
+non-empty sentence strings.
+
 ## Lab 2 — Parameter audit
 | Checkpoint | Total params | Embeddings % | Other notes |
 |---|---:|---:|---|
