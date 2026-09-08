@@ -1,118 +1,148 @@
 """Lab 2 starter: scaled dot-product attention and multi-head attention."""
 
 import math
+
 import torch
-from torch import nn
+import torch.nn as nn
 
 
 def attention(q, k, v, mask=None):
-    # TODO(Lab 2): implement scaled dot-product attention.
+    # 1) Compare Query with every Key Q × Kᵀ
+    scores = q @ k.transpose(-2, -1)
 
-    d_k = q.size(-1)
+    # 2) Scale scores
+    scores = scores / math.sqrt(q.size(-1))
 
-    # Compute scaled dot-product attention scores
-    scores = torch.matmul(q, k.transpose(-2, -1))
-    scores = scores / math.sqrt(d_k)
-
-    # Apply mask if provided
+    # 3) Apply mask BEFORE softmax
     if mask is not None:
-        if mask.dtype == torch.bool:
-            scores = scores.masked_fill(~mask, float("-inf"))
-        else:
-            scores = scores + mask
+        scores = scores.masked_fill(mask == 0, float("-inf"))
 
-    # Convert scores into attention weights
+    # 4) Convert scores to probabilities
     weights = torch.softmax(scores, dim=-1)
 
-    # Use the weights to combine the values
-    output = torch.matmul(weights, v)
+    # 5) Weighted combination of Values
+    output = weights @ v
 
-    return output, weights
+    return output
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, *args, **kwargs):
-        # TODO(Lab 2): define the projections/heads required by the notebook.
+    def __init__(self, d_model: int = 768, n_heads: int = 12):
         super().__init__()
+        
+        # d_model = حجم vector كل Token
+        # كل توكن داخل  بيدت بيس يكون ممثل فيكتور طوله 768 رقم.
+        #
+        # n_heads = عدد الـAttention Heads
+        # في BERT Base عندنا 12 Heads
 
-        d_model = kwargs.get(
-            "d_model",
-            args[0] if len(args) > 0 else None,
+        # لازم 768 تنقسم على 12 بدون باقي
+        # لأننا بنقسم الـvector بالتساوي على الـHeads        assert d_model % n_heads == 0
+        
+        # نخزن عدد الـHeads علاقة وحدة
+        self.h = n_heads
+        
+        # حجم فيكتور داخل كل هيد
+        #حجم ربرزنتيشن لكل توكن داخل هيد الواحد.
+        # 768 / 12 = 64
+        self.d_k = d_model // n_heads
+
+        # Learned Linear Layers
+        #
+        # نأخذ نفس input vector x
+        # ونحوله إلى 3 representations مختلفة:
+        #
+        # x -> Wq -> Q
+        # x -> Wk -> K
+        # x -> Wv -> V
+        #
+        # هذه الـweights يتعلمها الموديل أثناء التدريب
+
+        self.wq = nn.Linear(d_model, d_model)
+        self.wk = nn.Linear(d_model, d_model)
+        self.wv = nn.Linear(d_model, d_model)
+        
+        # بعد ما تخلص كل الـHeads
+        # ونجمع نتائجها مرة ثانية
+        # نستخدم Linear Layer أخيرة
+        # عشان تمزج معلومات الـHeads مع بعض
+        self.wo = nn.Linear(d_model, d_model)
+
+    def forward(self, x, mask=None):
+        b, n, _ = x.shape
+
+        def split(t):            
+            return (
+                t.view(b, n, self.h, self.d_k)
+                .transpose(1, 2)
+            )
+        # أول شيء نصنع كي وكيو فاليو من الفكتور
+        # ثم نقسمه على الـ12 Heads
+        q = split(self.wq(x))
+        k = split(self.wk(x))
+        v = split(self.wv(x))
+
+        out = attention(q, k, v, mask)
+
+        out = (
+            out.transpose(1, 2)
+            .contiguous()
+            .view(b, n, -1)
         )
 
-        num_heads = kwargs.get(
-            "num_heads",
-            args[1] if len(args) > 1 else None,
-        )
+        out = self.wo(out)
 
-        if d_model is None or num_heads is None:
-            raise TypeError("d_model and num_heads are required")
+        return out
+    
+"""
 
-        if d_model % num_heads != 0:
-            raise ValueError("d_model must be divisible by num_heads")
+    pytest tests/test_attention.py -q
+    2 passed in 2.84s
 
-        self.d_model = d_model
-        self.num_heads = num_heads
-        self.d_k = d_model // num_heads
 
-        # Q, K, V projections
-        self.q_proj = nn.Linear(d_model, d_model)
-        self.k_proj = nn.Linear(d_model, d_model)
-        self.v_proj = nn.Linear(d_model, d_model)
 
-        # Final output projection
-        self.out_proj = nn.Linear(d_model, d_model)
+then check pyTorch in 
+pytest tests/test_attention.py -q
 
-    def forward(self, q, k, v, mask=None):
-        batch_size = q.size(0)
+Lab 2
+│
+├─ هل Attention حقي صح؟
+│   → Equivalence test
+│
+├─ وين حجم الموديل؟
+│   → Parameter audit
+│
+├─ الموديل وين يركز؟
+│   → Attention map
+│
+└─ هل يركز على PAD بالغلط؟
+    → Pad leakage test
+    
 
-        # Project Q, K, V
-        q = self.q_proj(q)
-        k = self.k_proj(k)
-        v = self.v_proj(v)
+Q = what am I looking for?
+K = what do I contain / how can others match me?
+V = what information do I provide?
 
-        # Split into multiple heads
-        q = q.view(
-            batch_size,
-            -1,
-            self.num_heads,
-            self.d_k
-        ).transpose(1, 2)
+Attention:
+1. scores = Q @ K^T
+2. scale by sqrt(d_k)
+3. apply mask BEFORE softmax
+4. softmax -> attention weights
+5. weights @ V -> output
 
-        k = k.view(
-            batch_size,
-            -1,
-            self.num_heads,
-            self.d_k
-        ).transpose(1, 2)
+Shapes:
+Q,K,V = [batch, heads, seq, d_k]
+scores = [batch, heads, seq, seq]
 
-        v = v.view(
-            batch_size,
-            -1,
-            self.num_heads,
-            self.d_k
-        ).transpose(1, 2)
+BERT base:
+d_model = 768
+heads = 12
+d_k = 64
 
-        # Make mask compatible with the head dimension
-        if mask is not None:
-            if mask.dim() == 2:
-                mask = mask.unsqueeze(0).unsqueeze(0)
-            elif mask.dim() == 3:
-                mask = mask.unsqueeze(1)
-
-        # Apply attention to all heads
-        x, _ = attention(q, k, v, mask)
-
-        # Combine the heads again
-        x = x.transpose(1, 2).contiguous()
-
-        x = x.view(
-            batch_size,
-            -1,
-            self.d_model
-        )
-
-        # Final linear projection
-        output = self.out_proj(x)
-
-        return output
+Multi-head:
+split 768 into 12 heads * 64
+run attention independently
+concat heads back to 768
+apply output projection
+    """
+    
