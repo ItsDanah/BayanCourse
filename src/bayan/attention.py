@@ -7,29 +7,35 @@ from torch import nn
 
 def attention(q, k, v, mask=None):
     # TODO(Lab 2): implement scaled dot-product attention.
+
     d_k = q.size(-1)
+
+    # Compute scaled dot-product attention scores
     scores = torch.matmul(q, k.transpose(-2, -1))
     scores = scores / math.sqrt(d_k)
 
+    # Apply mask if provided
     if mask is not None:
         if mask.dtype == torch.bool:
             scores = scores.masked_fill(~mask, float("-inf"))
         else:
             scores = scores + mask
 
+    # Convert scores into attention weights
     weights = torch.softmax(scores, dim=-1)
+
+    # Use the weights to combine the values
     output = torch.matmul(weights, v)
 
-    return output
-    # raise NotImplementedError
+    return output, weights
 
 
 class MultiHeadAttention(nn.Module):
     def __init__(self, *args, **kwargs):
         # TODO(Lab 2): define the projections/heads required by the notebook.
-        def __init__(self, *args, **kwargs):
-            super().__init__()
-            d_model = kwargs.get(
+        super().__init__()
+
+        d_model = kwargs.get(
             "d_model",
             args[0] if len(args) > 0 else None,
         )
@@ -94,8 +100,8 @@ class MultiHeadAttention(nn.Module):
             elif mask.dim() == 3:
                 mask = mask.unsqueeze(1)
 
-        # Attention for all heads
-        x = attention(q, k, v, mask)
+        # Apply attention to all heads
+        x, _ = attention(q, k, v, mask)
 
         # Combine the heads again
         x = x.transpose(1, 2).contiguous()
@@ -110,4 +116,3 @@ class MultiHeadAttention(nn.Module):
         output = self.out_proj(x)
 
         return output
-        # raise NotImplementedError
