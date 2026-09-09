@@ -16,12 +16,29 @@
 ## Lab 3 — Models
 | Model | Metric | Validation | Frozen test | Train time |
 |---|---|---:|---:|---:|
-TF-IDF + LinearSVC Baseline
-Macro-F1: 1.0000
-Accuracy: 1.0000
-| Topic classifier | macro-F1 | | | |
+| TF-IDF + LinearSVC | macro-F1 | | 1.000 | |
+| Topic classifier | macro-F1 | | 1.000 | |
 | NER | entity-F1 | | | |
 | QA | span/null smoke | | | |
+
+### Lab 3A — TF-IDF + LinearSVC baseline
+
+- TF-IDF + LinearSVC baseline macro-F1: 1.0000
+- TF-IDF + LinearSVC baseline accuracy: 1.0000
+- Topic classifier frozen-test macro-F1: 1.0000
+- Topic classifier frozen-test accuracy: 1.0000
+- Improvement over baseline: +0.0000
+
+## Lab 3A — Fine-tune topic classifier
+
+Frozen Test Metrics
+test_loss: 0.0006405675085261464
+test_accuracy: 1.0
+test_macro_f1: 1.0
+test_runtime: 27.5726
+test_samples_per_second: 65.79
+test_steps_per_second: 8.233
+epoch: 3.0
 
 ## Lab 4 — Arabic model bake-off
 | Checkpoint | macro-F1 all | Gulf | MSA | AR fertility |
