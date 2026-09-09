@@ -18,7 +18,7 @@
 |---|---|---:|---:|---:|
 | TF-IDF + LinearSVC | macro-F1 | | 1.000 | |
 | Topic classifier | macro-F1 | | 1.000 | |
-| NER | entity-F1 | | | |
+| NER | entity-F1 | | 1.000 | |
 | QA | span/null smoke | | | |
 
 ### Lab 3A — TF-IDF + LinearSVC baseline
@@ -38,6 +38,17 @@ test_macro_f1: 1.0
 test_runtime: 27.5726
 test_samples_per_second: 65.79
 test_steps_per_second: 8.233
+epoch: 3.0
+
+## Lab 3B — Fine-tune NER
+test_loss: 0.00023462831450160593
+test_precision: 1.0
+test_recall: 1.0
+test_f1: 1.0
+test_accuracy: 1.0
+test_runtime: 9.2664
+test_samples_per_second: 43.167
+test_steps_per_second: 2.698
 epoch: 3.0
 
 ## Lab 4 — Arabic model bake-off
