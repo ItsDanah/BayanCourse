@@ -136,13 +136,38 @@ The labelled dataset also contains duplicate and semantically equivalent cases, 
     3. Review ambiguous examples and strengthen class-specific training examples.
 
 ## Lab 7 — Optimisation ladder
+
 | Rung | p50 | p99 | quality metric / paired Δ | Artefact size |
 |---|---:|---:|---|---:|
-| fp32 torch @512 padded | | | | |
-| fp32 torch @128 dynamic | | | | |
-| ONNX fp32 @128 | | | | |
-| ONNX INT8 @128 | | | | |
+| fp32 torch @512 padded | 404.36 ms | 536.05 ms | baseline | |
+| fp32 torch @128 dynamic | 27.18 ms | 48.22 ms | no model change | |
+| ONNX fp32 @128 | 15.75 ms | 24.15 ms | no observed quality loss | |
+| ONNX INT8 @128 | 13.76 ms | 23.45 ms | macro-F1 1.0000, Δ +0.0000 | |
 
-- HTTP p99, 16 concurrent:
-- classifier quantisation decision:
-- NER quantisation decision:
+- Classifier INT8 quality tax: **0.0000 macro-F1 points**
+- Classifier accuracy tax 95% CI: **[+0.0000, +0.0000]**
+- Classifier INT8 decision: **Use INT8. It achieves 22.86× p99 speed-up over the fp32 @512 padded baseline while preserving macro-F1 at 1.0000.**
+
+### NER optimisation
+
+| Rung | p50 | p99 | quality metric / paired Δ |
+|---|---:|---:|---|
+| fp32 torch @128 | 27.95 ms | 49.56 ms | F1 1.0000 |
+| ONNX fp32 @128 | 16.61 ms | 27.57 ms | no model-quality change |
+| ONNX INT8 @128 | 15.36 ms | 25.07 ms | F1 1.0000, Δ +0.0000 |
+
+- NER INT8 quality tax: **0.0000 F1 points**
+- NER accuracy tax 95% CI: **[+0.0000, +0.0000]**
+- Changed token predictions: **0 / 3600**
+- NER INT8 decision: **Use INT8. It reduces p99 latency from 49.56 ms to 25.07 ms (1.98× speed-up) with no observed loss in F1 or accuracy.**
+
+## Lab 7 — HTTP load test
+
+- Concurrency: 16 clients
+- Duration: 60 seconds
+- HTTP p99: 22.7 ms
+- Average latency: 11.9 ms
+- Throughput: 1348.86 requests/second
+- Startup canaries: green
+- Target: p99 ≤ 40 ms
+- Result: PASS
