@@ -34,17 +34,52 @@ Bayan processes bilingual Arabic and English text through a structured NLP pipel
 ## Project Structure
 
 ```
-├── src/bayan/          # Core NLP implementations
-├── scripts/            # Training, evaluation, and utility scripts
-├── notebooks/          # Experiments and model analysis
-├── tests/              # Automated tests
-├── data/               # Project datasets
-├── artifacts/          # Trained model artifacts
-├── BENCHMARKS.md       # Experimental results and metrics
-├── DECISIONS.md        # Model and tokenizer decisions
-├── NOTES.md            # Technical observations
-└── EVALUATION_REPORT.md
+├── data/
+│   ├── eval/                 # Evaluation datasets and behavioural test data
+│   ├── models/               # NER and QA model datasets
+│   ├── raw/                  # Raw citizen-feedback datasets
+│   ├── search/               # Semantic search datasets and results
+│   ├── serving/              # Inference benchmark and load-test configuration
+│   └── DATA_DICTIONARY.md
+│
+├── docs/
+│   ├── model_cards/          # Model cards for trained NLP components
+│   ├── CAPSTONE_CHECKLIST.md
+│   ├── ERROR_TAXONOMY.md
+│   └── LABS.md
+│
+├── notebooks/
+│   ├── 00_colab_setup.ipynb
+│   ├── 01_tokenizer_audit.py
+│   ├── 02_transformer_anatomy.py
+│   └── 05_retrieval_eval.py
+│
+├── scripts/                  # Training, evaluation, optimization, and utility scripts
+│
+├── src/
+│   └── bayan/
+│       ├── evaluation/       # Behavioural tests, bootstrap CIs, and evaluation slices
+│       ├── models/           # Topic classification, NER, and QA components
+│       ├── preprocessing/    # Text normalization, PII masking, and segmentation
+│       ├── search/           # Semantic search and retrieval components
+│       ├── serving/          # FastAPI serving and startup canaries
+│       └── attention.py      # Attention and Multi-Head Attention implementation
+│
+├── templates/
+│   └── model_card.md.j2      # Model card template
+│
+├── tests/                    # Automated test suite
+│
+├── BENCHMARKS.md             # Experimental results and performance metrics
+├── DECISIONS.md              # Model and tokenizer decisions
+├── EVALUATION_REPORT.md      # Evaluation findings and analysis
+├── NOTES.md                  # Technical observations and experiment notes
+├── Makefile                  # Project commands
+├── pyproject.toml            # Python project configuration
+├── requirements.txt          # Python dependencies
+└── README.md
 ```
+
 
 ## Technologies
 
