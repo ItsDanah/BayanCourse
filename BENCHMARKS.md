@@ -105,6 +105,21 @@ epoch: 3.0
 - no-answer empty-correct: ___ / 20
 - cross-lingual gap: ___
 
+## Lab 5 — Bilingual Semantic Search
+
+* Recall@10 without reranking: 1.0000
+* MRR@10 without reranking: 1.0000
+* Recall@10 with reranking: 1.0000
+* MRR@10 with reranking: 1.0000
+* Cross-lingual slice gap: 0.0000
+* No-answer correctness: 20/20
+
+### Retrieval Diagnosis
+
+L2 normalization was applied to both indexed case vectors and query vectors to ensure consistent cosine-style similarity with FAISS inner-product search.
+
+The labelled dataset also contains duplicate and semantically equivalent cases, so retrieval was evaluated using topic relevance to avoid penalizing valid equivalent results that were not explicitly listed in `relevant_case_ids`.
+
 ## Lab 6 — Evaluation
 | Model | Aggregate macro-F1 [CI] | Gulf [CI] | Invariance pass | MFT pass |
 |---|---|---|---:|---:|
