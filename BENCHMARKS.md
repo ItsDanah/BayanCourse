@@ -128,7 +128,12 @@ The labelled dataset also contains duplicate and semantically equivalent cases, 
 
 - paired comparison verdict:
 - error taxonomy top categories:
+    Label ambiguity: 90.8%
+    Arabic orthographic variation: 9.2%
 - top-3 prioritised fixes:
+    1. Improve parks vs roads class separation.
+    2. Add Arabic orthographic variation to training data.
+    3. Review ambiguous examples and strengthen class-specific training examples.
 
 ## Lab 7 — Optimisation ladder
 | Rung | p50 | p99 | quality metric / paired Δ | Artefact size |
