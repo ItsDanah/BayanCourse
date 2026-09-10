@@ -75,6 +75,14 @@ epoch: 3.0
 - QA answerable: 9/9
 - QA null handling: 3/3
 
+## Lab 4 — Dialect Audit
+
+- Gulf: 4,800 (66.67%)
+- MSA: 2,400 (33.33%)
+- Total Arabic examples: 7,200
+
+Evaluating only on MSA would not represent the full Arabic dataset, since the majority of the Arabic examples (66.67%) are Gulf dialect.
+
 ## Lab 4 — Arabic model bake-off
 | Checkpoint | macro-F1 all | Gulf | MSA | AR fertility |
 |---|---:|---:|---:|---:|
