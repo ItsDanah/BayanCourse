@@ -94,5 +94,5 @@ Tokenisation problems happen before attention and cannot be repaired downstream.
 Lab 4 — Dialect audit
 
 ## Lab 4 — Dialect audit
-- Distribution:
-- One-sentence implication for MSA-only evaluation:
+- Distribution: Gulf: 4,800 (66.67%); MSA: 2,400 (33.33%).
+- One-sentence implication for MSA-only evaluation: MSA-only evaluation would not accurately represent overall model performance because most of the Arabic dataset consists of Gulf dialect examples.

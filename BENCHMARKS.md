@@ -19,7 +19,7 @@
 | TF-IDF + LinearSVC | macro-F1 | | 1.000 | |
 | Topic classifier | macro-F1 | | 1.000 | |
 | NER | entity-F1 | | 1.000 | |
-| QA | span/null smoke | | | |
+| QA | span/null smoke | | 12/12 passed | |
 
 ### Lab 3A — TF-IDF + LinearSVC baseline
 
@@ -55,7 +55,6 @@ epoch: 3.0
 
 Frozen test results:
 
-100%|███████████████████████| 25/25 [00:06<00:00,  3.87it/s]
 test_loss: 0.00019963709928561002
 test_precision: 1.0
 test_recall: 1.0
@@ -88,7 +87,7 @@ epoch: 3.0
 * LOCATION recall delta: Not measured
 
 
-## Lab 4 — Arabic model bake-off
+## Lab 4 — Arabic model bake-off (optional)
 | Checkpoint | macro-F1 all | Gulf | MSA | AR fertility |
 |---|---:|---:|---:|---:|
 | multilingual incumbent | | | | |
@@ -98,12 +97,12 @@ epoch: 3.0
 ## Lab 5 — Search
 | Configuration | recall@10 | MRR@10 | p50 latency/query |
 |---|---:|---:|---:|
-| bi-encoder only | | | |
-| + cross-encoder rerank | | | |
+| bi-encoder only | 1.0000 | 1.0000 | |
+| + cross-encoder rerank | 1.0000 | 1.0000 | |
 | cross-lingual slice | | | |
 
-- no-answer empty-correct: ___ / 20
-- cross-lingual gap: ___
+- no-answer empty-correct: 20 / 20
+- cross-lingual gap: 0.0000
 
 ## Lab 5 — Bilingual Semantic Search
 
