@@ -40,16 +40,40 @@ test_samples_per_second: 65.79
 test_steps_per_second: 8.233
 epoch: 3.0
 
-## Lab 3B — Fine-tune NER
-test_loss: 0.00023462831450160593
+## Lab 3B — Step 2: Fine-tune NER.
+
+100%|███████████████████████| 50/50 [00:11<00:00,  4.18it/s]
+validation_loss: 0.00019964277453254908
+validation_precision: 1.0
+validation_recall: 1.0
+validation_f1: 1.0
+validation_accuracy: 1.0
+validation_runtime: 12.2899
+validation_samples_per_second: 65.094
+validation_steps_per_second: 4.068
+epoch: 3.0
+
+Frozen test results:
+
+100%|███████████████████████| 25/25 [00:06<00:00,  3.87it/s]
+test_loss: 0.00019963709928561002
 test_precision: 1.0
 test_recall: 1.0
 test_f1: 1.0
 test_accuracy: 1.0
-test_runtime: 9.2664
-test_samples_per_second: 43.167
-test_steps_per_second: 2.698
+test_runtime: 6.7089
+test_samples_per_second: 59.622
+test_steps_per_second: 3.726
 epoch: 3.0
+
+## Lab 3B — QA smoke set
+
+- NER entity-level F1: 1.0000
+- NER precision: 1.0000
+- NER recall: 1.0000
+- NER accuracy: 1.0000
+- QA answerable: 9/9
+- QA null handling: 3/3
 
 ## Lab 4 — Arabic model bake-off
 | Checkpoint | macro-F1 all | Gulf | MSA | AR fertility |
